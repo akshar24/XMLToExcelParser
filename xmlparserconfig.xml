@@ -1,0 +1,5 @@
+<Config>
+ <XMLNode path = ".//TimeSpan/Latency" tablename = "Latency"> </XMLNode>
+<XMLNode path = ".//TimeSpan/Iops" tablename = "Iops"> </XMLNode>
+<XMLNode path = ".//TimeSpan/CpuUtilization" tablename = "CPU Utilization"> </XMLNode>
+</Config>
