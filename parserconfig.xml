@@ -1,4 +1,4 @@
-<Configs> 
+<Configuration name = "global"> 
     <Configuration name = "workingDir">/Users/akshar/Desktop/Desktop - Akshar's MacBook Pro/XMLToExcelParser</Configuration>
    <Configuration name = "xmltoexcel">  
            <Configuration name = "inputFileInformation">
@@ -19,4 +19,4 @@
                 </Configuration>  
            </Configuration> 
    </Configuration> 
-</Configs>
+</Configuration>
