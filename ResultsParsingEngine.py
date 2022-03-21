@@ -6,7 +6,10 @@ Created on Mon Apr 29 10:04:21 2019
 """
 import xml.etree.ElementTree as et
 import pandas as pd
+from pandas.core.frame import DataFrame
+
 from Node import Node
+import os
 import time
 def constructTree(root):
     visited = set()
@@ -19,7 +22,7 @@ def constructTree(root):
         stack.pop(-1)
         ele.createDict()
         if ele.element not in visited:
-            ele.out()
+            #ele.out()
             visited.add(ele.element)
         for child in ele.element:
             if child not in visited:
@@ -29,28 +32,32 @@ def constructTree(root):
                 ele.child.append(childNode)
     return (rootNode, nodes)
 def transformToTable(root, nodes, xml):
+    print(root.element.tag)
     print("\n\n\n\n\n Test \n")
     cols  = colsRequested()
     target = cols[0]
     scan = set()
     for col in target:
        eles =  xml.findall(col)
+       
+       if col == ".//":
+           print(len(eles))
        if eles:
            for ele in eles:
                node = nodes[ele]
                scan.add(node)
-   
+    for n in scan:
+        print(n.element.tag, n.colname)
+
     visited = set()
     
     
     
-    stack = [root]
-    process = False
+    stack = [(root, root in scan)]
+    print(root in scan)
     while len(stack) > 0:
-        ele = stack[-1]
-        if not process:
-            if ele in scan:
-                process = True
+        ele, process = stack[-1]
+       
         hasbeenvisited = ele.element in visited
         visited.add(ele.element)
         continueIt = False
@@ -58,20 +65,19 @@ def transformToTable(root, nodes, xml):
             for child in ele.child:
                 continueIt = True
                 if child.element not in visited:
-                    stack.append(child)
+                    stack.append((child, process or child in scan))
         if continueIt:
             continue
-        postele = stack.pop(-1)
+        postele, process = stack.pop(-1)
         if postele == root:
             break
         if process:
-            print("**************START********************")
-            postele.merge()
-            postele.out()
-            postele.balance()
-            print("**************END*********************")
-        if postele in scan:
-            process  = False
+         #  print("**************START********************")
+           postele.merge()
+          # postele.out()
+           postele.balance()
+          # print("**************END*********************")
+    
 def unpack(root):
     for key, val in root.merged.items():
         new = list(map(lambda x: x.val, val))
@@ -98,6 +104,7 @@ def extractData(root, nodes, xml, file):
 
     for key in target:
         eles = xml.findall(key)
+        print("ELES", eles)
         if eles:
             for ele in eles:
                 node = nodes[ele]
@@ -120,7 +127,7 @@ def extractData(root, nodes, xml, file):
     
     return (summary, results)
 def run(path, filename):
-    path += "\\"+filename
+    path = os.path.join(path, filename)
     print("Parsing file:", path)
     xml = et.parse(path)
     start = time.time()
@@ -146,4 +153,18 @@ def run(path, filename):
     for key, val in summary.items():
         print("Number of Rows for Requested XML SubTree", key, "is: ", val)
     print("***************************************************************************************")
+    outPath = path.replace(".xml", ".xlsx")
+    excelWriter = pd.ExcelWriter(outPath)
+    for table, val in results[1].items():
+        if not val.empty:
+            print("here")
+            temp: DataFrame = val
+            temp.to_excel(excelWriter, table)
+    excelWriter.save()
+   # print(pd.read_excel(outPath, "Latency"))
     return results[1]
+path = input("Path: ")
+file = input("Filename: ")
+res = run(path, file)
+print(res)
+print(colsRequested())

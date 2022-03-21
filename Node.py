@@ -4,6 +4,9 @@ Created on Mon Apr 29 17:32:59 2019
 
 @author: Akshar
 """
+from collections import defaultdict
+
+
 class Value:
     def __init__(self, val, element):
         self.val = val
@@ -31,13 +34,35 @@ class Node:
         for key, val in self.attr.items():
             self.data[self.colname + ".Attrib" + key] = [Value(val, self)]
 
+ 
     def merge(self):
         merged = dict(self.data)
+        groups = defaultdict(list)
         for child in self.child:
-            for key, val in child.merged.items():
-                current = merged.get(key, [])
-                current = current + val
-                merged[key] = current
+            groups[child.element.tag].append(child)
+
+        for group, eles in groups.items():
+           cols=  set()
+           for child in eles:
+               for col in child.merged:
+                   cols.add(col)
+           for child in eles:
+                for col in cols:
+                    if col in child.merged:
+                        current = merged.get(col, [])
+                        current = current + child.merged[col]
+                        merged[col] = current
+                    else:
+                        current = merged.get(col, [])
+                        current = current + [Value("None", self)]
+                        merged[col] = current
+        
+
+       # for child in self.child:
+          #  for key, val in child.merged.items():
+           #     current = merged.get(key, [])
+            #    current = current + val
+           #     merged[key] = current
         self.merged = merged
     def balance(self):
         merged = dict(self.merged)
@@ -46,50 +71,26 @@ class Node:
             current = sizes.get(len(val), [])
             current.append(key)
             sizes[len(val)] = current
-        print("Sizes", sizes)
         
         if len(sizes) > 1:
             maxSize = max(list(sizes.keys()))
      
             items = list(sizes.items())
-            for key, val in items:
-                if key not in [maxSize]:
-                    toremove = []
-                    for v in val:
-                        
-                        if "Attrib" in v and v not in self.data:
-                        
-                            
-                            v1 = self.trackeBackMissingValues(merged, v, maxSize)
-                            merged[v] = v1
-                            current = sizes[maxSize]
-                            current.append(v)
-                            sizes[maxSize] = current
-                            toremove.append(v)
-                            
-                            
-                    if len(toremove) == len(sizes[key]):  
-                        del sizes[key]
-                    else:
-                        current = sizes[key]
-                        
-                        for r in toremove:
-                            current.remove(r)
-                        sizes[key] = current
+           
             while len(sizes) != 1:
                 lens = list(sizes.keys())
                 lens.sort()
-                print("Lens: ", lens)
                 small = lens[len(lens) -2]
                 big = lens[len(lens) - 1]
                 bigcols = sizes[big]
                 smallcols = sizes[small]
                 newlen = big * small
                 for smallcol in smallcols:
+                   
                     val = merged[smallcol]
                     newval = []
                     for v in val:
-                        newval = newval + [v] * big
+                            newval = newval + [v] * big
                     merged[smallcol] = newval
                 for bigcol in bigcols:
                     val = merged[bigcol]
@@ -100,7 +101,6 @@ class Node:
                 del sizes[big]
                 del sizes[small]
                 sizes[newlen] = newcols
-        print(sizes)
         self.merged = merged
     def trackeBackMissingValues(self, data, col, maxLen):
         split = col.split(".")

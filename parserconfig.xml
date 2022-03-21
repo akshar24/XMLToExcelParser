@@ -1,0 +1,22 @@
+<Configs> 
+    <Configuration name = "workingDir">/Users/akshar/Desktop/Desktop - Akshar's MacBook Pro/XMLToExcelParser</Configuration>
+   <Configuration name = "xmltoexcel">  
+           <Configuration name = "inputFileInformation">
+                <Configuration name = "inputFileName">test.xml</Configuration>
+           </Configuration> 
+           <Configuration name = "parserOutputConfig">
+                <Configuration name = "table">
+                    <Configuration name = "path">.//book/price</Configuration>
+                    <Configuration name = "tablename">Prices</Configuration>
+                </Configuration>  
+                <Configuration name = "table">
+                    <Configuration name = "path"> .//book</Configuration>
+                    <Configuration name = "tablename">Books</Configuration>
+                </Configuration>  
+                <Configuration name = "table">
+                    <Configuration name = "path">/</Configuration>
+                    <Configuration name = "tablename">Catalog</Configuration>
+                </Configuration>  
+           </Configuration> 
+   </Configuration> 
+</Configs>

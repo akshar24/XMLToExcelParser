@@ -1,0 +1,2 @@
+ATTRIBUTE_LABEL = "Attrib"
+PATH_SEP = "."

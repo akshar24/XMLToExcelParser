@@ -1,0 +1,14 @@
+<catalog store = "BRB Book Store">
+    <book id = "1">
+       <author> Akshar </author>
+       <title>Rust Programming</title>
+    </book>
+    <book id = "2">
+        <author> Kevin </author>
+       <title>C Programming</title>
+    </book>
+    <storeInformation for = "BRB Book Store">
+        <city>Alpharetta</city>
+        <state>Georgia</state>
+    </storeInformation>
+</catalog>
