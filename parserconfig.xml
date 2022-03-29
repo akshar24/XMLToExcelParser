@@ -1,5 +1,5 @@
 <Configuration name = "global"> 
-    <Configuration name = "workingDir">/Users/akshar/Desktop/Desktop - Akshar's MacBook Pro/XMLToExcelParser</Configuration>
+    <Configuration name = "workingDir">.</Configuration>
    <Configuration name = "xmltoexcel">  
            <Configuration name = "inputFileInformation">
                 <Configuration name = "inputFileName">test.xml</Configuration>

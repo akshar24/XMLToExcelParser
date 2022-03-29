@@ -13,7 +13,6 @@ class Node:
         self.children.add(child)
     def __iter__(self):
         return iter(self.children)
-        
 
 
     
